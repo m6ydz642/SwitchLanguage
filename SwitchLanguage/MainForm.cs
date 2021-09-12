@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace SwitchLanguage
 {
@@ -56,7 +57,7 @@ namespace SwitchLanguage
             Windows = 8
         }
         const int HOTKEY_ID = 31197; //Any number to use to identify the hotkey instance
-
+        private string _getRegistryKey;
         public MainForm()
         {
             InitializeComponent();
@@ -65,8 +66,8 @@ namespace SwitchLanguage
             TrayIcon.MouseDoubleClick += Tray_Icon_MouseDoubleClick;
             Resize += MainForm_Resize;
 
-
-
+            _getRegistryKey = "StartupNanumtip";
+            CheckLoadRegistry();
 
             //  RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.LControlKey);
             /*    RegisterHotKey((int)this.Handle, 0, (int)Keys.LControlKey, (int)Keys.LControlKey);
@@ -227,19 +228,60 @@ namespace SwitchLanguage
         {
             Close();
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            string runKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+            RegistryKey strUpKey = Registry.LocalMachine.OpenSubKey(runKey);
+
+            try
+            {
+                if (strUpKey.GetValue(_getRegistryKey) == null)
+                {
+                    strUpKey.Close();
+                    strUpKey = Registry.LocalMachine.OpenSubKey(runKey, true);
+                    // 시작프로그램 등록명과 exe경로를 레지스트리에 등록
+                    strUpKey.SetValue(_getRegistryKey, Application.ExecutablePath);
+                }
+                else
+                {
+                    // 레지스트리값 제거
+                    strUpKey.DeleteValue(_getRegistryKey);
+                }
+            }catch(Exception ex)
+            {
+                // 보안 문제 때문에 레지스트리 등록처리 안됨 ㅜㅜ
+            }
+
+            }
+
+        private void CheckLoadRegistry()
+        {
+            string runKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+            RegistryKey strUpKey = Registry.LocalMachine.OpenSubKey(runKey);
+
+            if (strUpKey.GetValue(_getRegistryKey) == null)
+            {
+                checkBox1.Checked = false;
+            }
+            else
+            {
+                checkBox1.Checked = true;
+            }
+        }
         /*
 private void backgroundkey()
 {
-  Message x = new Message();
-  Keys key;
-  key = Keys.Control;
-  while (isRunning)
-  {
-      Thread.Sleep(40); // minimum CPU usage
-                        //if ((Keyboard.GetKeyStates(Key.LeftCtrl)) > 0 && (Keyboard.GetKeyStates(Key.Space) > 0))
-      ProcessCmdKey(ref x, key);
+Message x = new Message();
+Keys key;
+key = Keys.Control;
+while (isRunning)
+{
+Thread.Sleep(40); // minimum CPU usage
+               //if ((Keyboard.GetKeyStates(Key.LeftCtrl)) > 0 && (Keyboard.GetKeyStates(Key.Space) > 0))
+ProcessCmdKey(ref x, key);
 
-  }
+}
 }*/
     }
 
