@@ -31,14 +31,17 @@ namespace SwitchLanguage
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button1 = new System.Windows.Forms.Button();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.TrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextTrayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.보기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.종료ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextTrayMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(130, 143);
+            this.button1.Location = new System.Drawing.Point(183, 83);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -47,30 +50,55 @@ namespace SwitchLanguage
             this.button1.UseWaitCursor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // notifyIcon1
+            // TrayIcon
             // 
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
+            this.TrayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("TrayIcon.Icon")));
+            this.TrayIcon.Text = "언어설정변경";
+            this.TrayIcon.Visible = true;
+            // 
+            // contextTrayMenu
+            // 
+            this.contextTrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.보기ToolStripMenuItem,
+            this.종료ToolStripMenuItem});
+            this.contextTrayMenu.Name = "contextTrayMenu";
+            this.contextTrayMenu.Size = new System.Drawing.Size(99, 48);
+            // 
+            // 보기ToolStripMenuItem
+            // 
+            this.보기ToolStripMenuItem.Name = "보기ToolStripMenuItem";
+            this.보기ToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.보기ToolStripMenuItem.Text = "보기";
+            this.보기ToolStripMenuItem.Click += new System.EventHandler(this.보기ToolStripMenuItem_Click);
+            // 
+            // 종료ToolStripMenuItem
+            // 
+            this.종료ToolStripMenuItem.Name = "종료ToolStripMenuItem";
+            this.종료ToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.종료ToolStripMenuItem.Text = "종료";
+            this.종료ToolStripMenuItem.Click += new System.EventHandler(this.종료ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(743, 400);
+            this.ClientSize = new System.Drawing.Size(452, 203);
             this.Controls.Add(this.button1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "언어설정변경";
             this.UseWaitCursor = true;
+            this.contextTrayMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.NotifyIcon TrayIcon;
+        private System.Windows.Forms.ContextMenuStrip contextTrayMenu;
+        private System.Windows.Forms.ToolStripMenuItem 보기ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 종료ToolStripMenuItem;
     }
 }
 

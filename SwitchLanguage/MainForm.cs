@@ -60,6 +60,14 @@ namespace SwitchLanguage
         public MainForm()
         {
             InitializeComponent();
+            Load += TrayIcon_Load;
+
+            TrayIcon.MouseDoubleClick += Tray_Icon_MouseDoubleClick;
+            Resize += MainForm_Resize;
+
+
+
+
             //  RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.LControlKey);
             /*    RegisterHotKey((int)this.Handle, 0, (int)Keys.LControlKey, (int)Keys.LControlKey);
                 RegisterHotKey((int)this.Handle, 1, 0x2, 0x4);
@@ -67,11 +75,42 @@ namespace SwitchLanguage
             // 0x3 = 쉬프트 
             // 0x2 = 컨트롤
             RegisterHotKey((int)this.Handle, 0, 0x2, (int)Keys.Space);
+
             // RegisterHotKey(this.Handle, 0, KeyModifiers.Alt, Keys.Space);
-            Application.Run(); // 윈폼 안쓰고 백그라운드로 실행
+         //  Application.Run(); // 윈폼 안쓰고 백그라운드로 실행 // 백그라운드로 실행하니 트레이 아이콘 안먹어서 잠시뺌
         }
 
- 
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == this.WindowState) // 최소 사이즈
+            {
+                // TrayIcon.Visible = true; // tray icon 표시
+                this.Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState) // 원래 사이즈
+            {
+                TrayIcon.Visible = false;
+                this.ShowInTaskbar = true; // 작업 표시줄 표시
+            }
+
+
+        }
+
+            private void Tray_Icon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            this.ShowInTaskbar = true;
+            this.Visible = true;
+            this.WindowState = FormWindowState.Normal;
+
+        }
+
+        private void TrayIcon_Load(object sender, EventArgs e)
+        {
+           TrayIcon.ContextMenuStrip = contextTrayMenu;
+
+        }
+
+
 
         //  윈폼 밖에서 작동하는 함수
         protected override void WndProc(ref Message m)
@@ -176,20 +215,32 @@ namespace SwitchLanguage
         {
             MessageBox.Show("백그라운드로 이미 작동하고 있어서 필요없음");
         }
-/*
-        private void backgroundkey()
-        {
-            Message x = new Message();
-            Keys key;
-            key = Keys.Control;
-            while (isRunning)
-            {
-                Thread.Sleep(40); // minimum CPU usage
-                                  //if ((Keyboard.GetKeyStates(Key.LeftCtrl)) > 0 && (Keyboard.GetKeyStates(Key.Space) > 0))
-                ProcessCmdKey(ref x, key);
 
-            }
-        }*/
+        private void 보기ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowInTaskbar = true;
+            this.Visible = true;
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void 종료ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+        /*
+private void backgroundkey()
+{
+  Message x = new Message();
+  Keys key;
+  key = Keys.Control;
+  while (isRunning)
+  {
+      Thread.Sleep(40); // minimum CPU usage
+                        //if ((Keyboard.GetKeyStates(Key.LeftCtrl)) > 0 && (Keyboard.GetKeyStates(Key.Space) > 0))
+      ProcessCmdKey(ref x, key);
+
+  }
+}*/
     }
 
 
