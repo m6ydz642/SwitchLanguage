@@ -1,17 +1,37 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Runtime.InteropServices;
 
 namespace SwitchLanguage
 {
     public partial class MainForm : Form
     {
+
+
         bool isRunning;
+        // object CurrentCulture;
+        #region imm32.dll :: Get_IME_Mode IME가져오기
+        [DllImport("imm32.dll")]
+        public static extern IntPtr ImmGetContext(IntPtr hWnd);
+        [DllImport("imm32.dll")]
+        public static extern Boolean ImmSetConversionStatus(IntPtr hIMC, Int32 fdwConversion, Int32 fdwSentence);
+        [DllImport("imm32.dll")]
+        private static extern IntPtr ImmGetDefaultIMEWnd(IntPtr hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr IParam);
+        [DllImport("imm32.dll")] private static extern bool 
+        ImmGetConversionStatus(IntPtr himc, ref int lpdw, ref int lpdw2);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
 
+        public const int IME_CMODE_ALPHANUMERIC = 0x0;   //영문
+        public const int IME_CMODE_NATIVE = 0x1;         //한글
+        #endregion
+
+        [DllImport("user32.dll")]
         private static extern int RegisterHotKey(int hwnd, int id, int fsModifiers, int vk);
         // public static extern bool RegisterHotKey(IntPtr hWnd, int id, KeyModifiers fsModifiers, Keys vk);
         // int로 안쓰고 열거형 타입으로 쓸경우
@@ -31,29 +51,7 @@ namespace SwitchLanguage
         {
             InitializeComponent();
 
-            //Keys.Control;
-            //Keys.A;
-
-            /*           isRunning = true;
-                       Thread TH = new Thread(Keyboardd);
-                       TH.SetApartmentState(ApartmentState.STA);
-                       CheckForIllegalCrossThreadCalls = false;
-                       TH.Start();*/
-             //  Application.Run(); // 윈폼 안쓰고 백그라운드로 실행
-
- 
-
-
-
-
-          /*  KeyPreview = true;
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(Form1_KeyDown);*/
-
-                if (((Keyboard.IsKeyDown(Key.LeftCtrl))))
-                {
-                    //CTRL + F is currently pressed
-                }
-
+     
             //  RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.LControlKey);
             /*    RegisterHotKey((int)this.Handle, 0, (int)Keys.LControlKey, (int)Keys.LControlKey);
                 RegisterHotKey((int)this.Handle, 1, 0x2, 0x4);
@@ -61,23 +59,11 @@ namespace SwitchLanguage
             // 0x3 = 쉬프트
             // 0x2 = 컨트롤
             RegisterHotKey((int)this.Handle, 0, 0x2, (int)Keys.Space);
-           // RegisterHotKey(this.Handle, 0, KeyModifiers.Alt, Keys.Space);
+            // RegisterHotKey(this.Handle, 0, KeyModifiers.Alt, Keys.Space);
 
 
-        } 
 
-        /*     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-             {
-                 switch (keyData)
-                 {
-                     case Keys.F1:
-                         break;
-                     default:
-                         break;
-                 }
-                 return base.ProcessCmdKey(ref msg, keyData);
-             }*/
-
+        }
 
 
 
@@ -96,9 +82,7 @@ namespace SwitchLanguage
                 //  if (m.WParam == (IntPtr)0x0) // 그 키의 ID가 0이면
                 if ((Keyboard.IsKeyDown(Key.Space)))
                 {
-
-                    // listViewFile_move(-1);
-
+                    ChangeIME();
                 }
 
                 if (m.WParam == (IntPtr)0x1) // 그 키의 ID가 1이면
@@ -112,6 +96,33 @@ namespace SwitchLanguage
             }
 
         }
+
+        private void ChangeIME()
+        {
+            IntPtr hwnd = ImmGetContext(this.Handle);  // C# WindowForm만 적용됨.
+            // [한/영]전환 b_toggle : true=한글, false=영어
+            int dwConversion = 0; int dwSentence = 0;
+
+            bool b_toggle = ImmGetConversionStatus(hwnd, ref dwConversion, ref dwSentence);
+
+    
+            Int32 dwConversionStatus = (b_toggle == true ? IME_CMODE_NATIVE : IME_CMODE_ALPHANUMERIC);
+            var a = ImmSetConversionStatus(hwnd, dwConversionStatus, 0); // 설정 전달
+
+            if (dwConversion == 0)
+            {
+                ImmSetConversionStatus(hwnd, IME_CMODE_NATIVE, 0); // 한글
+
+
+            }
+            else
+            {
+                ImmSetConversionStatus(hwnd, IME_CMODE_ALPHANUMERIC, 0); // 영어
+            }
+
+        }
+
+
 
 
         // 윈폼 안에서 작동하는 함수
@@ -163,28 +174,7 @@ namespace SwitchLanguage
         }
 
 
-        void Keyboardd()
-        {
-            int count = 0;
-            while (isRunning)
-            {
-                Thread.Sleep(40); // minimum CPU usage
-                                  //if ((Keyboard.GetKeyStates(Key.LeftCtrl)) > 0 && (Keyboard.GetKeyStates(Key.Space) > 0))
-                                  //  //  (Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.None) > 0) // KeyStates.Down
-                int controlkey = ((int)(Keyboard.GetKeyStates(Key.LeftCtrl) & KeyStates.Down));
-                int spacekey = ((int)(Keyboard.GetKeyStates(Key.Space) & KeyStates.Down));
-                if (controlkey > 0 && spacekey > 0)
-                {
-                    MessageBox.Show("감지!");
-                }  
-                else 
-                {
-                   // label1.Text = "Not Pressed";
-                }
-                
-            }
-        }
-
+     
         private void button1_Click(object sender, EventArgs e)
         {
         //    Keyboardd();
