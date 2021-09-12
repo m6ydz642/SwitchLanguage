@@ -15,7 +15,7 @@ namespace SwitchLanguage
         bool isRunning;
         // object CurrentCulture;
         #region imm32.dll :: Get_IME_Mode IME가져오기
-        [DllImport("imm32.dll")]
+        /*[DllImport("imm32.dll")]
         public static extern IntPtr ImmGetContext(IntPtr hWnd);
         [DllImport("imm32.dll")]
         public static extern Boolean ImmSetConversionStatus(IntPtr hIMC, Int32 fdwConversion, Int32 fdwSentence);
@@ -27,11 +27,11 @@ namespace SwitchLanguage
         ImmGetConversionStatus(IntPtr himc, ref int lpdw, ref int lpdw2);
 
         public const int IME_CMODE_ALPHANUMERIC = 0x0;   //영문
-        public const int IME_CMODE_NATIVE = 0x1;         //한글
+        public const int IME_CMODE_NATIVE = 0x1;         //한글*/
         #endregion
 
-        [Description("IME Hangul mode")] 
-        int VK_HANGUL = 0x15;
+        /*[Description("IME Hangul mode")] 
+        int VK_HANGUL = 0x15;*/
             
 
         [DllImport("user32.dll")]
@@ -41,13 +41,10 @@ namespace SwitchLanguage
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte a, byte bScan, int dwFlags, int dwExtraInfo);
-        public const int KEYEVENTF_KEYUP = (int)Key.HangulMode; //Key up flag 
-        public const int VK_RMENU = (int)Key.LeftAlt;
-
+  
 
         private const int VK_RETURN = 0x0D;
         private const int VK_A = (int)Keys.HangulMode;
-    //    private const int VK_D = (int)Keys.HangulMode;
 
 
         public enum KeyModifiers
