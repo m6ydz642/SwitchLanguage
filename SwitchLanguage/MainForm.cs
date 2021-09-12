@@ -60,8 +60,6 @@ namespace SwitchLanguage
         public MainForm()
         {
             InitializeComponent();
-
-     
             //  RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.LControlKey);
             /*    RegisterHotKey((int)this.Handle, 0, (int)Keys.LControlKey, (int)Keys.LControlKey);
                 RegisterHotKey((int)this.Handle, 1, 0x2, 0x4);
@@ -70,9 +68,7 @@ namespace SwitchLanguage
             // 0x2 = 컨트롤
             RegisterHotKey((int)this.Handle, 0, 0x2, (int)Keys.Space);
             // RegisterHotKey(this.Handle, 0, KeyModifiers.Alt, Keys.Space);
-
-
-
+            Application.Run(); // 윈폼 안쓰고 백그라운드로 실행
         }
 
  
