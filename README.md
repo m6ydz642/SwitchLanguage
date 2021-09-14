@@ -7,7 +7,7 @@
 
 Windows10부터 의 IME입력기 방식이 소스상으로 작동하지 않아 <br>
 
-(user32.dll) WndProc(윈폼 밖에서 입력 감지) RegisterHotKey 와 keybd_event의 함수에서 한영키를 등록해 사용하는 방식입니다 <br>
+WndProc(윈폼 밖에서 입력 감지)함수와 (user32.dll) RegisterHotKey 및 (user32.dll)keybd_event의 함수에서 한영키를 등록해 사용하는 방식입니다 <br>
 
 (지정 단축키를 설정 시 한영키를 눌러주는것처럼 함)
 
