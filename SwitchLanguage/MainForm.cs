@@ -96,15 +96,9 @@ namespace SwitchLanguage
              _getNameKeySetFile = "keyset.txt";
             CheckSetFile();
 
-            // 키가 한정되어있어서 고정으로 함
-            if (_ParseStartKey == Keys.Control)
-                _getMainKey = 0x02;
-            if (_ParseStartKey == Keys.Shift)
-                _getMainKey = 0x03;
-            if (_ParseStartKey == Keys.Alt)
-                _getMainKey = 0x01;
+            // CheckKey();
 
-            RegisterHotKey((int)this.Handle,0, _getMainKey, (int)_ParseEndKey); // 언어키 변경
+            RegisterHotKey((int)this.Handle,0, CheckStartKey(), (int)_ParseEndKey); // 언어키 변경
 
         }
 
@@ -187,16 +181,31 @@ namespace SwitchLanguage
 
             return checkHotKey;
         }
+
+        private int CheckStartKey()
+        {
+            int checkKey =0 ;
+            // 키가 한정되어있어서 고정으로 함
+            // 파일로 부터 읽어온 시작 키를 비교함
+            if (_ParseStartKey == Keys.Control)
+                checkKey = 0x02;
+            if (_ParseStartKey == Keys.Shift)
+                checkKey = 0x03;
+            if (_ParseStartKey == Keys.Alt)
+                checkKey = 0x01;
+
+            return checkKey;
+        }
         // 윈폼 안에서 키 감지하는 함수
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             Keys key = keyData;
-            if (!CheckStartKey(key))
+         /*   if (!CheckStartKey(key))
             {
                 MessageBox.Show("사용불가한 키입니다\r\n시작키는 왼쪽 컨트롤,왼쪽 쉬프트, 왼쪽 알트로 " +
                     "지정해주십시오", "응 사용안돼");
                 return true;
-            }
+            }*/
             string[] split = key.ToString().Split(',');
             // Space키의 경우 split하면 배열이 1개만 나오기 때문에 아래 split[1].Trim()에서 null예외가 뜸
             // 그래서 else문으로 빠지면 기존 처음에 입력받는 초기 Keys key = keyData;의 데이터를 이용함 
@@ -212,9 +221,9 @@ namespace SwitchLanguage
                     startkeyTextBox.Text = splitkey;
                 }
                 if (endkeyTextBox.Focused)
-                {
-                    endkeyTextBox.Text = splitkey;
+                { 
                     endkeyTextBox.Text = string.Empty;
+                endkeyTextBox.Text = splitkey;
                 }
             }
             else
@@ -226,13 +235,15 @@ namespace SwitchLanguage
                 }
                 if (endkeyTextBox.Focused)
                 {
-                    endkeyTextBox.Text = key.ToString();
                     endkeyTextBox.Text = string.Empty;
+
+                    endkeyTextBox.Text = key.ToString();
                 }
             }
              return true;
         }
 
+        // 키 설정 완료 
         private void SuccessHotKeyFunction(object sender, EventArgs e)
         {
             getUserNameFolder = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + "\\" + _getNameKeySetFile; // 내 문서
@@ -251,9 +262,16 @@ namespace SwitchLanguage
                 {
                     writer.WriteLine(setstartKey + ";" + setgendKey); // 파일에 키 설정 등록
                 }
+                
+                _ParseStartKey = startkey; // 적용된 키 전역변수 적용 (안하면 프로그램 저장 후 껏다켜야 적용 됨)
+                _ParseEndKey = endkey;
+
+                int checkStartKey = CheckStartKey();
+                // 
+                RegisterHotKey((int)this.Handle, 0, checkStartKey, (int)_ParseEndKey); // 언어키 변경
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
