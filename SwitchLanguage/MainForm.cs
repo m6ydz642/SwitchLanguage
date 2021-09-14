@@ -200,12 +200,12 @@ namespace SwitchLanguage
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             Keys key = keyData;
-         /*   if (!CheckStartKey(key))
+            if (startkeyTextBox.Focused && !CheckStartKey(key))
             {
                 MessageBox.Show("사용불가한 키입니다\r\n시작키는 왼쪽 컨트롤,왼쪽 쉬프트, 왼쪽 알트로 " +
                     "지정해주십시오", "응 사용안돼");
                 return true;
-            }*/
+            }
             string[] split = key.ToString().Split(',');
             // Space키의 경우 split하면 배열이 1개만 나오기 때문에 아래 split[1].Trim()에서 null예외가 뜸
             // 그래서 else문으로 빠지면 기존 처음에 입력받는 초기 Keys key = keyData;의 데이터를 이용함 
@@ -267,9 +267,11 @@ namespace SwitchLanguage
                 _ParseEndKey = endkey;
 
                 int checkStartKey = CheckStartKey();
-                // 
-                RegisterHotKey((int)this.Handle, 0, checkStartKey, (int)_ParseEndKey); // 언어키 변경
+                // 조만간 UnRegisterHotKey를 써서 기존 단축키는 삭제처리 해야 됨
 
+                RegisterHotKey((int)this.Handle, 0, checkStartKey, (int)_ParseEndKey); // 언어키 변경
+                MessageBox.Show("언어 단축키 설정이 완료되었습니다\r\n쉬프트 + 기타 조합 또는 Alt + " +
+                    "기타조합은 작동하지 않을 수 있습니다\r\n(윈도우 자체적으로 안됨)", "완료");
             }
             catch (Exception ex)
             {
@@ -346,6 +348,7 @@ namespace SwitchLanguage
             }catch(Exception ex)
             {
                 // 보안 문제 때문에 레지스트리 등록처리 안됨 ㅜㅜ
+                MessageBox.Show("본 오류가 뜬다면 보안상 문제로 사용할 수 없습니다 (예외처리 메시지)","ㅠㅠ");
             }
 
             }
@@ -365,11 +368,7 @@ namespace SwitchLanguage
             }
         }
 
-        private void checkedListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
+    
         private void settingKey_Click(object sender, EventArgs e)
         {
             startkeyTextBox.Focus();
