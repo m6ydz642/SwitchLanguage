@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
+using System.IO;
 
 namespace SwitchLanguage
 {
@@ -58,6 +59,9 @@ namespace SwitchLanguage
         }
         const int HOTKEY_ID = 31197; //Any number to use to identify the hotkey instance
         private string _getRegistryKey;
+
+        private string getUserNameFolder { get; set; }
+        private string _getNameKeySetFile;
         public MainForm()
         {
             InitializeComponent();
@@ -78,7 +82,9 @@ namespace SwitchLanguage
             RegisterHotKey((int)this.Handle, 0, 0x2, (int)Keys.Space);
 
             // RegisterHotKey(this.Handle, 0, KeyModifiers.Alt, Keys.Space);
-         //  Application.Run(); // 윈폼 안쓰고 백그라운드로 실행 // 백그라운드로 실행하니 트레이 아이콘 안먹어서 잠시뺌
+            //  Application.Run(); // 윈폼 안쓰고 백그라운드로 실행 // 백그라운드로 실행하니 트레이 아이콘 안먹어서 잠시뺌
+            _getNameKeySetFile = "keyset.txt";
+            CheckSetFile();
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -158,30 +164,34 @@ namespace SwitchLanguage
                 splitkey = split[1].Trim();
                 if (startkeyTextBox.Focused)
                 {
+                    startkeyTextBox.Text = string.Empty;
                     startkeyTextBox.Text = splitkey;
                 }
                 if (endkeyTextBox.Focused)
                 {
                     endkeyTextBox.Text = splitkey;
+                    endkeyTextBox.Text = string.Empty;
                 }
             }
             else
             {
                 if (startkeyTextBox.Focused)
                 {
+                   startkeyTextBox.Text = string.Empty;
                     startkeyTextBox.Text = key.ToString();
                 }
                 if (endkeyTextBox.Focused)
                 {
                     endkeyTextBox.Text = key.ToString();
+                    endkeyTextBox.Text = string.Empty;
                 }
             }
              return true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void SuccessHotKeyFunction(object sender, EventArgs e)
         {
-            string getUserNameFolder = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            getUserNameFolder = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + "\\" + _getNameKeySetFile; // 내 문서
 
             string getStartKey = startkeyTextBox.Text;
              string getEndKey = endkeyTextBox.Text;
@@ -193,7 +203,10 @@ namespace SwitchLanguage
                 int setstartKey = (int)startkey;
                 int setgendKey = (int)endkey;
 
-              
+                using (StreamWriter writer = new StreamWriter(getUserNameFolder))
+                {
+                    writer.WriteLine(setstartKey + ";" + setgendKey); // 파일에 키 설정 등록
+                }
 
             }
             catch(Exception ex)
@@ -203,6 +216,37 @@ namespace SwitchLanguage
 
         }
 
+        private void CheckSetFile()
+        {
+            getUserNameFolder = Environment.GetFolderPath
+            (System.Environment.SpecialFolder.Personal) + "\\" + _getNameKeySetFile;
+
+            FileInfo getUsmeFolderFileInfo = new FileInfo(getUserNameFolder);
+            if (getUsmeFolderFileInfo.Exists) // 파일이 존재하면
+            {
+                using (StreamReader reader = new StreamReader(getUserNameFolder))
+                {
+                    string getPathDir = reader.ReadToEnd();
+                    string[] splitDir = getPathDir.Split(';');
+
+                    string getStartKey = splitDir[0];
+                    string getEndKey = splitDir[1];
+
+                    // enum열거형 타입에서 다시 사용자 string으로 변환
+                    // int endkey = Int32.Parse(getStartKey);
+                    Keys PraseStartKey = (Keys)Int32.Parse(getStartKey); // string -> int -> Keys순변환
+                    Keys PraseEndKey = (Keys)Int32.Parse(getEndKey); // string -> int -> Keys순변환
+
+                    startkeyTextBox.Text = PraseStartKey.ToString();
+                    endkeyTextBox.Text = PraseEndKey.ToString();
+                }
+            }
+            else
+            {
+                MessageBox.Show("keyset.txt파일이 내 문서에 존재하지않습니다\r\n경로 설정 후 프로그램을 " +
+                    "종료시 새롭게 생성합니다", "파일이 없엉");
+            }
+        }
         private void 보기ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.ShowInTaskbar = true;

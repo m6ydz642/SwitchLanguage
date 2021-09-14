@@ -31,7 +31,7 @@ namespace SwitchLanguage
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.button1 = new System.Windows.Forms.Button();
+            this.SuccessHotKey = new System.Windows.Forms.Button();
             this.TrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextTrayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.보기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,16 +47,16 @@ namespace SwitchLanguage
             this.contextTrayMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // SuccessHotKey
             // 
-            this.button1.Location = new System.Drawing.Point(14, 115);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "전환";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.UseWaitCursor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.SuccessHotKey.Location = new System.Drawing.Point(14, 115);
+            this.SuccessHotKey.Name = "SuccessHotKey";
+            this.SuccessHotKey.Size = new System.Drawing.Size(87, 23);
+            this.SuccessHotKey.TabIndex = 0;
+            this.SuccessHotKey.Text = "키설정 완료";
+            this.SuccessHotKey.UseVisualStyleBackColor = true;
+            this.SuccessHotKey.UseWaitCursor = true;
+            this.SuccessHotKey.Click += new System.EventHandler(this.SuccessHotKeyFunction);
             // 
             // TrayIcon
             // 
@@ -172,7 +172,7 @@ namespace SwitchLanguage
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.SuccessHotKey);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "언어설정변경";
@@ -184,7 +184,7 @@ namespace SwitchLanguage
         }
 
         #endregion
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button SuccessHotKey;
         private System.Windows.Forms.NotifyIcon TrayIcon;
         private System.Windows.Forms.ContextMenuStrip contextTrayMenu;
         private System.Windows.Forms.ToolStripMenuItem 보기ToolStripMenuItem;
