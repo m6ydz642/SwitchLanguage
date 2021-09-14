@@ -3,7 +3,7 @@
 <br><br>
 ![image](https://user-images.githubusercontent.com/45617447/133294811-e9647e55-49bd-4685-b4ec-436237098295.png)
 
-다른 조합으로 언어의 키설정을 추가하는 프로그램입니다 <br>
+다른 조합으로 언어의 키설정을 추가하는 프로그램입니다 (윈폼)<br>
 
 Windows10부터 의 IME입력기 방식이 소스상으로 작동하지 않아 <br>
 
