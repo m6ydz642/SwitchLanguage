@@ -38,12 +38,18 @@ namespace SwitchLanguage
             this.종료ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.startkeyTextBox = new System.Windows.Forms.TextBox();
+            this.endkeyTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.settingKey = new System.Windows.Forms.Button();
             this.contextTrayMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(98, 52);
+            this.button1.Location = new System.Drawing.Point(14, 115);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -83,28 +89,87 @@ namespace SwitchLanguage
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(267, 52);
+            this.checkBox1.Location = new System.Drawing.Point(327, 49);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(88, 16);
             this.checkBox1.TabIndex = 2;
             this.checkBox1.Text = "부팅시 실행";
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.UseWaitCursor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(265, 37);
+            this.label1.Location = new System.Drawing.Point(325, 34);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(105, 12);
             this.label1.TabIndex = 3;
             this.label1.Text = "시작프로그램 등록";
+            this.label1.UseWaitCursor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(133, 12);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "변경할 언어키 입력받기";
+            // 
+            // startkeyTextBox
+            // 
+            this.startkeyTextBox.Location = new System.Drawing.Point(60, 47);
+            this.startkeyTextBox.Name = "startkeyTextBox";
+            this.startkeyTextBox.Size = new System.Drawing.Size(85, 21);
+            this.startkeyTextBox.TabIndex = 6;
+            // 
+            // endkeyTextBox
+            // 
+            this.endkeyTextBox.Location = new System.Drawing.Point(60, 74);
+            this.endkeyTextBox.Name = "endkeyTextBox";
+            this.endkeyTextBox.Size = new System.Drawing.Size(85, 21);
+            this.endkeyTextBox.TabIndex = 7;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 52);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "시작키";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 79);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(41, 12);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "보조키";
+            // 
+            // settingKey
+            // 
+            this.settingKey.Location = new System.Drawing.Point(151, 47);
+            this.settingKey.Name = "settingKey";
+            this.settingKey.Size = new System.Drawing.Size(86, 23);
+            this.settingKey.TabIndex = 10;
+            this.settingKey.Text = "키설정 하기";
+            this.settingKey.UseVisualStyleBackColor = true;
+            this.settingKey.Click += new System.EventHandler(this.settingKey_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(452, 203);
+            this.Controls.Add(this.settingKey);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.endkeyTextBox);
+            this.Controls.Add(this.startkeyTextBox);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button1);
@@ -126,6 +191,12 @@ namespace SwitchLanguage
         private System.Windows.Forms.ToolStripMenuItem 종료ToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox startkeyTextBox;
+        private System.Windows.Forms.TextBox endkeyTextBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button settingKey;
     }
 }
 

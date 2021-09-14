@@ -143,78 +143,64 @@ namespace SwitchLanguage
             }
         }
 
-     /*   private void ChangeIME()
+        // 윈폼 안에서 키 감지하는 함수
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            IntPtr hwnd = ImmGetContext(this.Handle);  // C# WindowForm만 적용됨.
-            // [한/영]전환 b_toggle : true=한글, false=영어
-            int dwConversion = 0; int dwSentence = 0;
+            Keys key = keyData;
+            string[] split = key.ToString().Split(',');
+            // Space키의 경우 split하면 배열이 1개만 나오기 때문에 아래 split[1].Trim()에서 null예외가 뜸
+            // 그래서 else문으로 빠지면 기존 처음에 입력받는 초기 Keys key = keyData;의 데이터를 이용함 
 
-            bool b_toggle = ImmGetConversionStatus(hwnd, ref dwConversion, ref dwSentence);
+            string splitkey = null;
 
-          
-            Int32 dwConversionStatus = (b_toggle == true ? IME_CMODE_NATIVE : IME_CMODE_ALPHANUMERIC);
-            
-            var a = ImmSetConversionStatus(hwnd, dwConversionStatus, 0); // 설정 전달
-
-
-            if (b_toggle)
+            if (split.Length >= 2)
             {
-                ImmSetConversionStatus(hwnd, IME_CMODE_NATIVE, 0); // 한글
+                splitkey = split[1].Trim();
+                if (startkeyTextBox.Focused)
+                {
+                    startkeyTextBox.Text = splitkey;
+                }
+                if (endkeyTextBox.Focused)
+                {
+                    endkeyTextBox.Text = splitkey;
+                }
             }
             else
             {
-                ImmSetConversionStatus(hwnd, IME_CMODE_ALPHANUMERIC, 0); // 영어
+                if (startkeyTextBox.Focused)
+                {
+                    startkeyTextBox.Text = key.ToString();
+                }
+                if (endkeyTextBox.Focused)
+                {
+                    endkeyTextBox.Text = key.ToString();
+                }
             }
+             return true;
         }
-
-        private void ChangeIME(bool b_toggle)
-        {
-            IntPtr hwnd = ImmGetContext(this.Handle);  //C# WindowForm만 적용됨.
-            // [한/영]전환 b_toggle : true=한글, false=영어
-            Int32 dwConversion = (b_toggle == true ? IME_CMODE_NATIVE : IME_CMODE_ALPHANUMERIC);
-            ImmSetConversionStatus(hwnd, dwConversion, 0);
-        }*/
-
-
-
-        // 윈폼 안에서 작동하는 함수
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            Keys key = keyData & ~(Keys.Shift | Keys.Control);
-            switch (key)
-            {
-                case Keys.F:
-
-                    // 조합키 사용 시
-
-                    if ((keyData & Keys.Control) != 0)
-                    {
-                        MessageBox.Show("Ctrl+F");
-                    }
-                    break;
-
-                case Keys.F5:
-
-                    // 단일키 사용시
-
-                    MessageBox.Show("f5");
-
-                    break;
-
-                default:
-
-                    MessageBox.Show("지정되지 않은 키입니다.");
-
-                    return base.ProcessCmdKey(ref msg, keyData);
-            }
-            return true;
-        }
-
-
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("백그라운드로 이미 작동하고 있어서 필요없음");
+            string getUserNameFolder = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+
+            string getStartKey = startkeyTextBox.Text;
+             string getEndKey = endkeyTextBox.Text;
+            try
+            {
+                Keys startkey = (Keys)Enum.Parse(typeof(Keys), getStartKey);
+                Keys endkey = (Keys)Enum.Parse(typeof(Keys), getEndKey);// string키이름을 Enum열거형 keys타입으로 형변환
+
+                int setstartKey = (int)startkey;
+                int setgendKey = (int)endkey;
+
+              
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+
         }
 
         private void 보기ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -269,20 +255,16 @@ namespace SwitchLanguage
                 checkBox1.Checked = true;
             }
         }
-        /*
-private void backgroundkey()
-{
-Message x = new Message();
-Keys key;
-key = Keys.Control;
-while (isRunning)
-{
-Thread.Sleep(40); // minimum CPU usage
-               //if ((Keyboard.GetKeyStates(Key.LeftCtrl)) > 0 && (Keyboard.GetKeyStates(Key.Space) > 0))
-ProcessCmdKey(ref x, key);
 
-}
-}*/
+        private void checkedListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void settingKey_Click(object sender, EventArgs e)
+        {
+            startkeyTextBox.Focus();
+        }
     }
 
 
