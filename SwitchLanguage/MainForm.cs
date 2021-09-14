@@ -348,7 +348,8 @@ namespace SwitchLanguage
             }catch(Exception ex)
             {
                 // 보안 문제 때문에 레지스트리 등록처리 안됨 ㅜㅜ
-                MessageBox.Show("본 오류가 뜬다면 보안상 문제로 사용할 수 없습니다 (예외처리 메시지)","ㅠㅠ");
+                MessageBox.Show("본 오류가 뜬다면 보안상 문제로 사용할 수 없습니다 (예외처리 메시지)\r\n" +
+                    "수동으로 등록 바랍니다 (Win + R키 후 shell:startup엔터 후 시작프로그램 폴더에서 등록)", "ㅠㅠ");
             }
 
             }
