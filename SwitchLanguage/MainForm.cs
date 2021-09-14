@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using System.IO;
+using System.Text;
 
 namespace SwitchLanguage
 {
@@ -37,7 +38,10 @@ namespace SwitchLanguage
             
 
         [DllImport("user32.dll")]
+       // private static extern int RegisterHotKey(int hwnd, int id, int fsModifiers, int vk);
         private static extern int RegisterHotKey(int hwnd, int id, int fsModifiers, int vk);
+
+
         // public static extern bool RegisterHotKey(IntPtr hWnd, int id, KeyModifiers fsModifiers, Keys vk);
         // int로 안쓰고 열거형 타입으로 쓸경우
 
@@ -62,6 +66,9 @@ namespace SwitchLanguage
 
         private string getUserNameFolder { get; set; }
         private string _getNameKeySetFile;
+        private Keys _ParseStartKey;
+        private Keys _ParseEndKey;
+        private int _getMainKey;
         public MainForm()
         {
             InitializeComponent();
@@ -77,14 +84,28 @@ namespace SwitchLanguage
             /*    RegisterHotKey((int)this.Handle, 0, (int)Keys.LControlKey, (int)Keys.LControlKey);
                 RegisterHotKey((int)this.Handle, 1, 0x2, 0x4);
                 RegisterHotKey((int)this.Handle, 2, 0x0, (int)Keys.Space);*/
-            // 0x3 = 쉬프트 
+            // 0x3 = 쉬프트 (제대로 안됨)
             // 0x2 = 컨트롤
-            RegisterHotKey((int)this.Handle, 0, 0x2, (int)Keys.Space);
+            // 0x1 = 알트
+         
 
-            // RegisterHotKey(this.Handle, 0, KeyModifiers.Alt, Keys.Space);
-            //  Application.Run(); // 윈폼 안쓰고 백그라운드로 실행 // 백그라운드로 실행하니 트레이 아이콘 안먹어서 잠시뺌
-            _getNameKeySetFile = "keyset.txt";
+             //  RegisterHotKey((int)this.Handle, 0, 0x2, (int)Keys.Space) ; // 언어키 변경
+
+             // RegisterHotKey(this.Handle, 0, KeyModifiers.Alt, Keys.Space);
+             //  Application.Run(); // 윈폼 안쓰고 백그라운드로 실행 // 백그라운드로 실행하니 트레이 아이콘 안먹어서 잠시뺌
+             _getNameKeySetFile = "keyset.txt";
             CheckSetFile();
+
+            // 키가 한정되어있어서 고정으로 함
+            if (_ParseStartKey == Keys.Control)
+                _getMainKey = 0x02;
+            if (_ParseStartKey == Keys.Shift)
+                _getMainKey = 0x03;
+            if (_ParseStartKey == Keys.Alt)
+                _getMainKey = 0x01;
+
+            RegisterHotKey((int)this.Handle,0, _getMainKey, (int)_ParseEndKey); // 언어키 변경
+
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -148,11 +169,34 @@ namespace SwitchLanguage
                 }
             }
         }
+        private bool CheckStartKey(Keys key) // 시작키가 사용가능한 키인지 체크
+        {
+            bool checkHotKey = false;
+            string[] split = key.ToString().Split(',');
+            if (split.Length >= 2)
+            {
+                split[1] = split[1].Trim();
 
+                if (split[1] == "Control")
+                    checkHotKey = true;
+                if (split[1] == "Alt")
+                    checkHotKey = true;
+                if (split[1] == "Shift")
+                    checkHotKey = true;
+            }
+
+            return checkHotKey;
+        }
         // 윈폼 안에서 키 감지하는 함수
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             Keys key = keyData;
+            if (!CheckStartKey(key))
+            {
+                MessageBox.Show("사용불가한 키입니다\r\n시작키는 왼쪽 컨트롤,왼쪽 쉬프트, 왼쪽 알트로 " +
+                    "지정해주십시오", "응 사용안돼");
+                return true;
+            }
             string[] split = key.ToString().Split(',');
             // Space키의 경우 split하면 배열이 1개만 나오기 때문에 아래 split[1].Trim()에서 null예외가 뜸
             // 그래서 else문으로 빠지면 기존 처음에 입력받는 초기 Keys key = keyData;의 데이터를 이용함 
@@ -234,11 +278,14 @@ namespace SwitchLanguage
 
                     // enum열거형 타입에서 다시 사용자 string으로 변환
                     // int endkey = Int32.Parse(getStartKey);
-                    Keys PraseStartKey = (Keys)Int32.Parse(getStartKey); // string -> int -> Keys순변환
-                    Keys PraseEndKey = (Keys)Int32.Parse(getEndKey); // string -> int -> Keys순변환
+                    Keys ParseStartKey = (Keys)Int32.Parse(getStartKey); // string -> int -> Keys순변환
+                    Keys ParseEndKey = (Keys)Int32.Parse(getEndKey); // string -> int -> Keys순변환
 
-                    startkeyTextBox.Text = PraseStartKey.ToString();
-                    endkeyTextBox.Text = PraseEndKey.ToString();
+                    _ParseStartKey = ParseStartKey;
+                    _ParseEndKey = ParseEndKey;
+
+                    startkeyTextBox.Text = ParseStartKey.ToString();
+                    endkeyTextBox.Text = ParseEndKey.ToString();
                 }
             }
             else
