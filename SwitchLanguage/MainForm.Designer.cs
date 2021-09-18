@@ -36,7 +36,7 @@ namespace SwitchLanguage
             this.contextTrayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.보기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.종료ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.startupCheckBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.startkeyTextBox = new System.Windows.Forms.TextBox();
@@ -86,17 +86,17 @@ namespace SwitchLanguage
             this.종료ToolStripMenuItem.Text = "종료";
             this.종료ToolStripMenuItem.Click += new System.EventHandler(this.종료ToolStripMenuItem_Click);
             // 
-            // checkBox1
+            // startupCheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(327, 49);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(88, 16);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "부팅시 실행";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.UseWaitCursor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.startupCheckBox.AutoSize = true;
+            this.startupCheckBox.Location = new System.Drawing.Point(327, 49);
+            this.startupCheckBox.Name = "startupCheckBox";
+            this.startupCheckBox.Size = new System.Drawing.Size(88, 16);
+            this.startupCheckBox.TabIndex = 2;
+            this.startupCheckBox.Text = "부팅시 실행";
+            this.startupCheckBox.UseVisualStyleBackColor = true;
+            this.startupCheckBox.UseWaitCursor = true;
+            this.startupCheckBox.CheckedChanged += new System.EventHandler(this.startupCheckBox_CheckedChanged);
             // 
             // label1
             // 
@@ -116,6 +116,7 @@ namespace SwitchLanguage
             this.label2.Size = new System.Drawing.Size(133, 12);
             this.label2.TabIndex = 5;
             this.label2.Text = "변경할 언어키 입력받기";
+            this.label2.UseWaitCursor = true;
             // 
             // startkeyTextBox
             // 
@@ -123,6 +124,7 @@ namespace SwitchLanguage
             this.startkeyTextBox.Name = "startkeyTextBox";
             this.startkeyTextBox.Size = new System.Drawing.Size(85, 21);
             this.startkeyTextBox.TabIndex = 6;
+            this.startkeyTextBox.UseWaitCursor = true;
             // 
             // endkeyTextBox
             // 
@@ -130,6 +132,7 @@ namespace SwitchLanguage
             this.endkeyTextBox.Name = "endkeyTextBox";
             this.endkeyTextBox.Size = new System.Drawing.Size(85, 21);
             this.endkeyTextBox.TabIndex = 7;
+            this.endkeyTextBox.UseWaitCursor = true;
             // 
             // label3
             // 
@@ -139,6 +142,7 @@ namespace SwitchLanguage
             this.label3.Size = new System.Drawing.Size(41, 12);
             this.label3.TabIndex = 8;
             this.label3.Text = "시작키";
+            this.label3.UseWaitCursor = true;
             // 
             // label4
             // 
@@ -148,6 +152,7 @@ namespace SwitchLanguage
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 9;
             this.label4.Text = "보조키";
+            this.label4.UseWaitCursor = true;
             // 
             // settingKey
             // 
@@ -157,6 +162,7 @@ namespace SwitchLanguage
             this.settingKey.TabIndex = 10;
             this.settingKey.Text = "키설정 하기";
             this.settingKey.UseVisualStyleBackColor = true;
+            this.settingKey.UseWaitCursor = true;
             this.settingKey.Click += new System.EventHandler(this.settingKey_Click);
             // 
             // MainForm
@@ -171,7 +177,7 @@ namespace SwitchLanguage
             this.Controls.Add(this.startkeyTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.startupCheckBox);
             this.Controls.Add(this.SuccessHotKey);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
@@ -189,7 +195,7 @@ namespace SwitchLanguage
         private System.Windows.Forms.ContextMenuStrip contextTrayMenu;
         private System.Windows.Forms.ToolStripMenuItem 보기ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 종료ToolStripMenuItem;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox startupCheckBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox startkeyTextBox;

@@ -326,33 +326,43 @@ namespace SwitchLanguage
             Close();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void startupCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             string runKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
             RegistryKey strUpKey = Registry.LocalMachine.OpenSubKey(runKey);
 
-            try
+            if (startupCheckBox.Checked)
             {
-                if (strUpKey.GetValue(_getRegistryKey) == null)
+                try
                 {
-                    strUpKey.Close();
-                    strUpKey = Registry.LocalMachine.OpenSubKey(runKey, true);
-                    // 시작프로그램 등록명과 exe경로를 레지스트리에 등록
-                    strUpKey.SetValue(_getRegistryKey, Application.ExecutablePath);
+                    if (strUpKey.GetValue(_getRegistryKey) == null)
+                    {
+                        strUpKey.Close();
+                        strUpKey = Registry.LocalMachine.OpenSubKey(runKey, true);
+                        // 시작프로그램 등록명과 exe경로를 레지스트리에 등록
+                        strUpKey.SetValue(_getRegistryKey, Application.ExecutablePath);
+                    }
+                    else
+                    {
+                        // 레지스트리값 제거
+                        strUpKey.DeleteValue(_getRegistryKey);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // 레지스트리값 제거
-                    strUpKey.DeleteValue(_getRegistryKey);
+                    // 보안 문제 때문에 레지스트리 등록처리 안됨 ㅜㅜ
+                    if (MessageBox.Show("본 오류가 뜬다면 보안상 문제로 사용할 수 없습니다 \r\n(예외처리 메시지)" +
+                          "개별시작 등록을 하시겠습니까?", "보안 오류", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes) ;
+                    else
+                    {
+                        MessageBox.Show("취소하셨습니다r\n(Win + R키 후 shell:startup엔터 후 시작프로그램 폴더에서 직접 등록)" +
+                            "을 해주십시오 ", "시작프로그램 등록취소", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
                 }
-            }catch(Exception ex)
-            {
-                // 보안 문제 때문에 레지스트리 등록처리 안됨 ㅜㅜ
-                MessageBox.Show("본 오류가 뜬다면 보안상 문제로 사용할 수 없습니다 (예외처리 메시지)\r\n" +
-                    "수동으로 등록 바랍니다 (Win + R키 후 shell:startup엔터 후 시작프로그램 폴더에서 등록)", "ㅠㅠ");
             }
 
-            }
+        }
 
         private void CheckLoadRegistry()
         {
@@ -361,11 +371,11 @@ namespace SwitchLanguage
 
             if (strUpKey.GetValue(_getRegistryKey) == null)
             {
-                checkBox1.Checked = false;
+                startupCheckBox.Checked = false;
             }
             else
             {
-                checkBox1.Checked = true;
+                startupCheckBox.Checked = true;
             }
         }
 
