@@ -62,7 +62,8 @@ namespace SwitchLanguage
             Windows = 8
         }
         const int HOTKEY_ID = 31197; //Any number to use to identify the hotkey instance
-        private string _getRegistryKey;
+        private readonly string _getRegistryKey; // const사용시 생성자에서 값 할당 안됨
+        private const string _getRegistryKeyconst = "StartupNanumtip"; // const사용시 생성자에서 값 할당 안됨
 
         private string getUserNameFolder { get; set; }
         private string _getNameKeySetFile;
@@ -72,6 +73,7 @@ namespace SwitchLanguage
         public MainForm()
         {
             InitializeComponent();
+
             Load += TrayIcon_Load;
 
             TrayIcon.MouseDoubleClick += Tray_Icon_MouseDoubleClick;
@@ -96,10 +98,8 @@ namespace SwitchLanguage
              _getNameKeySetFile = "keyset.txt";
             CheckSetFile();
 
-            // CheckKey();
 
             RegisterHotKey((int)this.Handle,0, CheckStartKey(), (int)_ParseEndKey); // 언어키 변경
-
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -331,6 +331,7 @@ namespace SwitchLanguage
             string runKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
             RegistryKey strUpKey = Registry.LocalMachine.OpenSubKey(runKey);
 
+            
             if (startupCheckBox.Checked)
             {
                 try
@@ -338,7 +339,8 @@ namespace SwitchLanguage
                     if (strUpKey.GetValue(_getRegistryKey) == null)
                     {
                         strUpKey.Close();
-                        strUpKey = Registry.LocalMachine.OpenSubKey(runKey, true);
+                        // strUpKey = Registry.LocalMachine.OpenSubKey(runKey, true);
+                        strUpKey = Microsoft.Win32.Registry.Users.CreateSubKey(runKey);
                         // 시작프로그램 등록명과 exe경로를 레지스트리에 등록
                         strUpKey.SetValue(_getRegistryKey, Application.ExecutablePath);
                     }
@@ -352,7 +354,11 @@ namespace SwitchLanguage
                 {
                     // 보안 문제 때문에 레지스트리 등록처리 안됨 ㅜㅜ
                     if (MessageBox.Show("본 오류가 뜬다면 보안상 문제로 사용할 수 없습니다 \r\n(예외처리 메시지)" +
-                          "개별시작 등록을 하시겠습니까?", "보안 오류", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes) ;
+                          "개별시작 등록을 하시겠습니까?", "보안 오류", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                    {
+                        WriterFile();
+                    }
+
                     else
                     {
                         MessageBox.Show("취소하셨습니다r\n(Win + R키 후 shell:startup엔터 후 시작프로그램 폴더에서 직접 등록)" +
@@ -363,7 +369,33 @@ namespace SwitchLanguage
             }
 
         }
+        private void WriterFile()
+        {
+            string getCurrentPath = System.Reflection.Assembly.GetExecutingAssembly().Location; // 실행 파일경로
+            string[] splitCurrentPath = getCurrentPath.Split('\\');
+            string getCommonStartUpPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
+            string getUserNameFolder = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + "\\"; // 내 문서
+            string getFileName = getUserNameFolder  + splitCurrentPath[splitCurrentPath.Length - 1];
+            string getFilePath = getCommonStartUpPath + "\\" + splitCurrentPath[splitCurrentPath.Length - 1];
+            try
+            {
 
+                File.Copy(getCurrentPath, getFilePath,  true);
+                
+                     /*using (FileStream fileStream = fileInfo.Create(getCurrentPath))
+                     {
+                         byte[] bytes = new byte[fileStream.Length];
+                         int count = bytes.Length;
+                         fileStream.Write(bytes, 0, (int)fileStream.Length);
+                     }*/
+                }catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("시작프로그램 직접등록에서 오류가  : " + e);
+                MessageBox.Show("시작프로그램 직접등록에서 오류가 발생하였습니다\r\n관리자 권한으로 본 프로그램을 실행해주세요"
+      , "권한오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+        }
         private void CheckLoadRegistry()
         {
             string runKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
